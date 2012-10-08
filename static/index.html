@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Embed Example</title>
+    <script type="text/javascript" src="http://cache.spreadshirt.net/Public/Confomat/Js/confomat-embed.js"></script>
+
+    <style type="text/css">
+        body {
+            display: table;
+            border-spacing: 10px;
+        }
+
+        body > div {
+            display: table-cell;
+            border: 1px solid gray;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #basket {
+            padding: 0 10px;
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="wrapper">
+        <h2>Design your T-Shirt</h2>
+
+        <script type="text/javascript">
+
+            var _instance;
+
+            confomat.create({
+                shopId: 205909,
+                calculatePriceFunction: function(product, callback) {
+                    return product.price * 1.2 + product.configurations.length * 2;
+                },
+                addToBasketFunction: function(basketItem, callback) {
+
+                    // replace with ajax request
+                    setTimeout(function(){
+                        // return success to confomat
+                        callback(true);
+
+                        // refresh basket content
+                        var div = document.createElement("div");
+                        div.innerHTML = '<img src="http://image.spreadshirt.net/image-server/v1/products/' + basketItem.productId + '/views/1" />';
+                        document.getElementById("basket").appendChild(div);
+
+                    }, 1000);
+                },
+                checkoutFunction: function() {
+                    var w = document.getElementById('wrapper');
+                    w.parentNode.removeChild(w);
+                },
+                deepLinks: true
+            }, {className: "foo"}, function(err, confomatInstance) {
+                if (err) {
+                    err = (err === true ? "Some error occurred" : err);
+                    alert(err);
+                } else {
+                    _instance = confomatInstance;
+                }
+            });
+        </script>
+        <noscript>
+            Your browser doesn't support javascript, which is necessary to run confomat.
+        </noscript>
+    </div>
+
+    <div id="basket">
+        <h2>Basket</h2>
+    </div>
+
+</body>
+</html>
