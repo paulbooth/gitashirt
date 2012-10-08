@@ -18,8 +18,8 @@ rem.console(gh, {
     user("users", profile.login, "repos").get(function (err, json) {
       app.get('/repos', function (req, res) {
         res.setHeader('content-type', 'text/html')
-        res.send(json.map(function (gist) {
-          return '<a href="/#tx1=' + gist.full_name + '">' + gist.full_name + '</a><br>';
+        res.send(json.map(function (repo) {
+          return '<a href="/#tx1=' + repo.full_name + '">' + repo.full_name + '</a><br>';
         }).join(''));
       });
     });
