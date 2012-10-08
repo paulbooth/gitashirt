@@ -21,8 +21,32 @@ var oauth = rem.oauth(github, "http://localhost:3000/oauth/callback/");
 // created the oauth middleware.
 app.use(oauth.middleware(function (req, res, next) {
   console.log("User is now authenticated.");
-  res.redirect('/');
+
+  // Get the list of repos.
+  req.user('user').get(function (err, profile) {
+    req.user("users", profile.login, "repos").get({per_page: 100}, function (err, json) {
+      json.forEach(function (repo) {
+        shirt_configs[repo.full_name] = 'tx1=' + repo.full_name;
+
+        // Try to fetch .gitshirt.
+        rem.url('https://raw.github.com/' + repo.full_name + '/master/.gitshirt').get(function (req, res) {
+          if (res.statusCode == 200) {
+            rem.consume(res, function (bin) {
+              // Github had a terrible thing that sent 404 pages as error code 200
+              if (String(bin).indexOf('<html') == -1) {
+                console.log('Loaded .gitshirt from ' + repo.full_name);
+                shirt_configs[repo.full_name] = bin;
+              }
+            })
+          }
+        });
+      });
+      res.redirect('/');
+    });
+  });
 }));
+
+var shirt_configs = {};
 
 // Login URL calls oauth.startSession, which redirects to an oauth URL.
 app.get('/login/', function (req, res) {
@@ -39,15 +63,9 @@ app.get('/', function(req, res) {
     res.end("<a href='/login/'>Log in with OAuth</a>");
   } else {
     res.write('<h1>Authenticated.</h1>');
-    req.user('user').get(function (err, profile) {
-      req.user("users", profile.login, "repos").get(function (err, json) {
-        // uncomment to see repo object structure
-        //console.log(JSON.stringify(json, undefined, 2));
-        res.end(json.map(function (repo) {
-          return '<a href="designshirt.html#tx1=' + repo.full_name + '">' + repo.full_name + '</a><br>';
-        }).join(''));
-      });
-    });
+    res.end(Object.keys(shirt_configs).map(function (key) {
+      return '<b>' + key + '</b>: <a href="/designshirt.html#' + shirt_configs[key] + '">' + key + '</a><br>';
+    }).join(''));
   }
 });
 
