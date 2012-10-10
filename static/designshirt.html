@@ -4,7 +4,9 @@
 <head>
     <title>Git A Shirt</title>
     <script type="text/javascript" src="http://cache.spreadshirt.net/Public/Confomat/Js/confomat-embed.js"></script>
-
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="bootstrap/js/bootstrap.min.js"></script>
     <style type="text/css">
         body {
             display: table;
@@ -29,7 +31,7 @@
 <body>
 
     <div id="wrapper">
-        <h2>Design your T-Shirt</h2>
+        <h2>Your shirt is looking awesome</h2>
 
         <script type="text/javascript">
 
@@ -38,7 +40,7 @@
             confomat.create({
                 shopId: 427036,
                 calculatePriceFunction: function(product, callback) {
-                    return product.price * 1.2 + product.configurations.length * 2;
+                    return product.price * 2.0 + product.configurations.length * 2;
                 },
                 addToBasketFunction: function(basketItem, callback) {
 
