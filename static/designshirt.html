@@ -39,6 +39,8 @@
 
             confomat.create({
                 shopId: 427036,
+                platform: 'NA',
+                locale: 'us_US',
                 calculatePriceFunction: function(product, callback) {
                     return product.price * 1.2 + product.configurations.length * 2;
                 },

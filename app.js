@@ -27,12 +27,26 @@ app.use(oauth.middleware(function (req, res, next) {
   req.user('user').get(function (err, profile) {
     req.user("users", profile.login, "repos").get({per_page: 100}, function (err, json) {
       json.forEach(function (repo) {
-        shirt_configs[repo.full_name] = 'tx1=' + repo.full_name;
+        console.log(repo);
+        shirt_configs[repo.name] = 'tx1=' + repo.name;
+        var directoryName = "./static/images/" + repo.owner.login;
+        var fileName = directoryName + "/" + repo.name + ".png";
+        // fs.writeFile(fileName, "", function(err) {
+        //     if(err) {
+        //         console.log(err);
+        //     } else {
+        //         console.log("The file was saved!");
+        //     }
+        // }); 
+        if (!fs.existsSync(directoryName)) {
+          fs.mkdirSync(directoryName);
+        }
         gm(200, 400, "#ddff99f3")
-          .drawText(10, 50, repo.full_name)
-          .write("/static/images/" + repo.full_name + ".png", function (err) {
+          .font("Helvetica.ttf", 50)
+          .drawText(10, 50, repo.name)
+          .write(fileName, function (err) {
             // ...
-            console.log("ERROR MAKING IMAGE " + repo.full_name);
+            console.log("ERROR MAKING IMAGE " + repo.name);
             console.log(err);
           });
         // Try to fetch .gitshirt.
@@ -42,7 +56,7 @@ app.use(oauth.middleware(function (req, res, next) {
               // Github had a terrible thing that sent 404 pages as error code 200
               if (String(bin).indexOf('<html') == -1) {
                 console.log('Loaded .gitshirt from ' + repo.full_name);
-                shirt_configs[repo.full_name] = bin;
+                shirt_configs[repo.name] = bin;
               }
             })
           }
