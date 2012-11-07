@@ -1,0 +1,26 @@
+<product xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">
+    <productType xlink:href="http://api.spreadshirt.com/api/v1/shops/427036/productTypes/210" id="210"/>
+    <appearance id="1"/>
+    <restrictions>
+        <freeColorSelection>false</freeColorSelection>
+        <example>false</example>
+    </restrictions>
+    <configurations>
+        <configuration type="design">
+            <printArea id="330"/>
+            <printType xlink:href="http://api.spreadshirt.com/api/v1/shops/427036/printTypes/17" id="17"/>
+            <offset unit="mm">
+                <x>60.0</x>
+                <y>70.0</y>
+            </offset>
+            <content dpi="25.4" unit="mm">
+                <svg>
+                    <image transform="" width="50" height="50" printColorIds="1" designId="DESIGN_ID"/>
+                </svg>
+            </content>
+            <restrictions>
+                <changeable>false</changeable>
+            </restrictions>
+        </configuration>
+    </configurations>
+</product>
