@@ -40,7 +40,7 @@
             confomat.create({
                 shopId: 427036,
                 calculatePriceFunction: function(product, callback) {
-                    return product.price * 2.0 + product.configurations.length * 2;
+                    return product.price * 1.2 + product.configurations.length * 2;
                 },
                 addToBasketFunction: function(basketItem, callback) {
 
@@ -78,6 +78,10 @@
     <div id="basket">
         <h2>Basket</h2>
     </div>
+
+    <!-- <div id="store">
+    <iframe height="1800" width="848" src="http://gitashirt.spreadshirt.com/" name="Spreadshop" id="Spreadshop" frameborder="0" onload="window.scrollTo(0, 0);"></iframe>
+    </div> -->
 
 </body>
 </html>

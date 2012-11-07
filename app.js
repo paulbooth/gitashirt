@@ -1,5 +1,6 @@
 // npm install rem read express
 var fs = require('fs');
+var gm = require('gm');
 var rem = require('rem');
 var read = require('read');
 var express = require('express');
@@ -27,7 +28,13 @@ app.use(oauth.middleware(function (req, res, next) {
     req.user("users", profile.login, "repos").get({per_page: 100}, function (err, json) {
       json.forEach(function (repo) {
         shirt_configs[repo.full_name] = 'tx1=' + repo.full_name;
-
+        gm(200, 400, "#ddff99f3")
+          .drawText(10, 50, repo.full_name)
+          .write("/static/images/" + repo.full_name + ".png", function (err) {
+            // ...
+            console.log("ERROR MAKING IMAGE " + repo.full_name);
+            console.log(err);
+          });
         // Try to fetch .gitshirt.
         rem.url('https://raw.github.com/' + repo.full_name + '/master/.gitshirt').get(function (req, res) {
           if (res.statusCode == 200) {
