@@ -13,6 +13,7 @@ var shop_id='427036';
 var spreadshirt_host = 'api.spreadshirt.com';
 var design_path = '/api/v1/shops/' + shop_id + '/designs';
 var product_path = '/api/v1/shops/' + shop_id + '/products';
+var basket_path = '/api/v1/baskets';
 
 
 function createDesign() {
@@ -224,6 +225,59 @@ function displayProduct(url) {
     });
   })
 }
+// *** end tutorial
 
-createDesign();
+function getBasket() {
+  var basket_payload = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<basket xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://api.spreadshirt.net">\n<token>xy</token>\n</basket>';
+  var time = Date.now();
+  var options = {
+    host: spreadshirt_host,
+    path: basket_path + '?apiKey='+ api_key + 
+                        '&sig=' + sha1('POST ' + 'http://' + spreadshirt_host + design_path + " " + time + " " + secret_key) + 
+                        '&time=' + time ,
+    method: 'POST',
+    headers: {
+        'Content-Type': 'text/xml',
+        'Content-Length': basket_payload.length
+    }
+  };
+
+  var req = http.request(options, function(res) {
+    // res.setEncoding('utf8');
+    console.log('STATUS: ' + res.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    if (res.headers.location) {
+      console.log("basket location:");
+      console.log(res.headers.location);
+    } else {
+      var body = '';
+      if( res.headers['content-encoding'] == 'gzip' ) {
+        var gzip = zlib.createGunzip();
+        res.pipe(gzip);
+        output = gzip;
+      } else {
+        output = res;
+      }
+
+      output.on('data', function (chunk) {
+          body += chunk;
+      });
+
+      output.on('end', function() {
+        console.log("Basket Post done making:");
+        console.log(body);
+      });
+    }
+  }).on('error', function(e) {
+    console.log('http post ERROR: ' + e.message);
+    console.log(JSON.stringify(e, undefined, 2));
+  });
+  req.write(basket_payload);
+  req.end();
+}
+
+//createDesign();
+getBasket();
+
+
 
